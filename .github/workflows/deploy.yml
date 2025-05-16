@@ -1,0 +1,37 @@
+name: Deploy and Version
+
+on:
+  push:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.VCS_TOKEN }}
+
+      - name: Get latest tag
+        id: latest_tag
+        run: |
+          latest=$(git describe --tags --abbrev=0 2>/dev/null || echo "0.0.0")
+          echo "latest=$latest" >> $GITHUB_OUTPUT
+
+      - name: Bump version
+        id: bump_version
+        run: |
+          latest=${{ steps.latest_tag.outputs.latest }}
+          IFS='.' read -r major minor patch <<< "$latest"
+          new_patch=$((patch + 1))
+          new_version="$major.$minor.$new_patch"
+          echo "new_version=$new_version" >> $GITHUB_OUTPUT
+
+      - name: Create and push tag
+        run: |
+          new_version=${{ steps.bump_version.outputs.new_version }}
+          git config user.name "github-actions"
+          git config user.email "github-actions@github.com"
+          git tag $new_version
+          git push origin $new_version

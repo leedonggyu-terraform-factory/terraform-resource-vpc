@@ -8,7 +8,7 @@ resource "aws_subnet" "was" {
 
   tags = merge({
     Name = "${var.common_attr.name}-${var.common_attr.env}-was-subnet-${each.key}"
-  }, var.tag_attr)
+  }, var.subnet_tags_attr["was"], var.tag_attr)
 }
 
 resource "aws_route_table" "was_rt" {

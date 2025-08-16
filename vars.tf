@@ -1,5 +1,6 @@
 variable "common_attr" {
   description = "공통 정보"
+  type        = any
 
   default = {
     name   = ""
@@ -11,6 +12,7 @@ variable "common_attr" {
 variable "vpc_attr" {
 
   description = "VPC 정보"
+  type        = any
 
   default = {
     cidr_block = "10.0.0.0/16",
@@ -30,6 +32,7 @@ variable "vpc_attr" {
 }
 
 variable "subnet_tags_attr" {
+  type = any
   default = {
     "webserver" : {},
     "was" : {},
@@ -38,10 +41,12 @@ variable "subnet_tags_attr" {
 }
 
 variable "tag_attr" {
+  type = any
 
 }
 
 variable "webserver_nacl_attr" {
+  type = any
   default = {
     "ingress" : {
       "100" : {
@@ -72,6 +77,7 @@ variable "webserver_nacl_attr" {
 }
 
 variable "was_nacl_attr" {
+  type = any
   default = {
     "ingress" : {
       "100" : {
@@ -96,6 +102,7 @@ variable "was_nacl_attr" {
 }
 
 variable "db_nacl_attr" {
+  type = any
   default = {
     "ingress" : {
       "100" : {

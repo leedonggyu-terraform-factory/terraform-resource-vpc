@@ -8,6 +8,10 @@ resource "aws_iam_role" "flow_logs_role" {
     Statement = [
       {
         Action = "sts:AssumeRole"
+        Effect = "Allow"
+        Principal = {
+          Service = "vpc-flow-logs.amazonaws.com"
+        }
       }
     ]
   })

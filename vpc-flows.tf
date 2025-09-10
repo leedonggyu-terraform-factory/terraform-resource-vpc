@@ -29,7 +29,7 @@ resource "aws_iam_policy" "flow_logs_policy" {
           "logs:DescribeLogStreams"
         ],
         "Resource" : [
-          aws_cloudwatch_log_group.flow_logs_log_group.arn
+          aws_cloudwatch_log_group.flow_logs_log_group[0].arn
         ]
       }
     ]

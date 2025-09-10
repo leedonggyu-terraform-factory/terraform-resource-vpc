@@ -61,7 +61,7 @@ resource "aws_flow_log" "flow_logs" {
   iam_role_arn = aws_iam_role.flow_logs_role[0].arn
   log_destination = aws_cloudwatch_log_group.flow_logs_log_group[0].arn
   traffic_type = var.flow_logs.traffic_type
-  vpc_id = var.vpc_id
+  vpc_id = aws_vpc.vpc.id
   
   tags = {
     Name = "${var.common_attr.name}-${var.common_attr.env}-flow-logs"

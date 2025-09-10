@@ -125,6 +125,11 @@ variable "db_nacl_attr" {
   }
 }
 
-
-
-
+variable "flow_logs" {
+  default = {
+    enable = false
+    cloudwatch_log_destination = ""
+    traffic_type = "ALL"
+    retention_in_days = 30
+  }
+}

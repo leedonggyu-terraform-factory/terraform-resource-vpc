@@ -14,6 +14,7 @@ resource "aws_iam_role" "flow_logs_role" {
 }
 
 resource "aws_iam_policy" "flow_logs_policy" {
+  count = var.flow_logs.enable ? 1 : 0
   name = "${var.common_attr.name}-${var.common_attr.env}-flow-logs-policy"
   policy = jsonencode({
     Version = "2012-10-17"
@@ -35,8 +36,16 @@ resource "aws_iam_policy" "flow_logs_policy" {
   })
 }
 
+resource "aws_iam_role_policy_attachment" "flow_logs_policy_attach" {
+  count = var.flow_logs.enable ? 1 : 0
+  role       = aws_iam_role.flow_logs_role[0].name
+  policy_arn = aws_iam_policy.flow_logs_policy[0].arn
+}
+
 ## flow-logs cloudwatch log groups
 resource "aws_cloudwatch_log_group" "flow_logs_log_group" {
+  count = var.flow_logs.enable ? 1 : 0
+
   name = "vpc-flow/${var.common_attr.name}/${var.common_attr.env}"
   retention_in_days = var.flow_logs.retention_in_days
   log_group_class = "INFREQUENT_ACCESS"
@@ -47,8 +56,10 @@ resource "aws_cloudwatch_log_group" "flow_logs_log_group" {
 }
 
 resource "aws_flow_log" "flow_logs" {
-  iam_role_arn = var.flow_logs.iam_role_arn
-  log_destination = var.flow_logs.cloudwatch_log_destination
+  count = var.flow_logs.enable ? 1 : 0
+
+  iam_role_arn = aws_iam_role.flow_logs_role[0].arn
+  log_destination = aws_cloudwatch_log_group.flow_logs_log_group[0].arn
   traffic_type = var.flow_logs.traffic_type
   vpc_id = var.vpc_id
   
